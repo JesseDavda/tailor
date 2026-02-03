@@ -1,0 +1,14 @@
+cv:
+  name: John Doe
+  email: john@example.com
+  sections:
+    experience:
+      - company: TechCo
+        position: Engineer
+        highlights:
+          - Built APIs
+          - Led team
+    skills:
+      technical:
+        - Python
+        - Go

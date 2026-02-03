@@ -1,0 +1,7 @@
+cv:
+  name: [this, should, be, a, string]
+  sections:
+    experience:
+      - invalid yaml syntax here:
+        missing: proper
+      indentation

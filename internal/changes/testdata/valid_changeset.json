@@ -1,0 +1,21 @@
+{
+  "changes": [
+    {
+      "id": "change_001",
+      "type": "modify",
+      "path": "cv.sections.experience[0].highlights[0]",
+      "operation": {
+        "old_value": "Built APIs",
+        "new_value": "Built scalable RESTful APIs"
+      },
+      "reason": "Added specificity",
+      "confidence": "high",
+      "priority": 1
+    }
+  ],
+  "summary": {
+    "total_changes": 1,
+    "sections_affected": ["experience"],
+    "key_optimizations": ["API keywords"]
+  }
+}

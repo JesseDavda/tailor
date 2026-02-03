@@ -1,0 +1,14 @@
+{
+  "changes": [
+    {
+      "id": "change_001",
+      "type": "invalid_type",
+      "path": "cv.sections.experience[0]",
+      "operation": {
+        "new_value": "test"
+      },
+      "confidence": "invalid_confidence",
+      "priority": 999
+    }
+  ]
+}

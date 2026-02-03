@@ -1,0 +1,32 @@
+cv:
+  name: Jane Smith
+  email: jane@example.com
+  phone: +1-234-567-8900
+  sections:
+    experience:
+      - company: TechCorp
+        position: Senior Engineer
+        duration: 2020-2023
+        highlights:
+          - Built scalable microservices architecture
+          - Led team of 5 engineers
+          - Improved performance by 40%
+      - company: StartupXYZ
+        position: Engineer
+        duration: 2018-2020
+        highlights:
+          - Developed REST APIs
+          - Implemented CI/CD pipeline
+    education:
+      - institution: University of Technology
+        degree: BS Computer Science
+        year: 2018
+    skills:
+      technical:
+        - Python
+        - Go
+        - Kubernetes
+        - AWS
+      soft:
+        - Leadership
+        - Communication

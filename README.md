@@ -1,6 +1,12 @@
 # Tailor - AI-Powered Resume Tailoring CLI
 
+[![Tests](https://github.com/JesseDavda/tailor/actions/workflows/test.yml/badge.svg)](https://github.com/JesseDavda/tailor/actions/workflows/test.yml)
+
 Tailor is a Go CLI tool that uses Claude API to intelligently adapt your master RenderCV YAML resume to specific job descriptions. It maintains complete factual accuracy while optimizing for ATS keywords and relevance.
+
+This is **not** an automated application tool, tailor is built to give you a starting point to allow you to more efficiently show your expertise and personality to prospective employers.
+
+AI can make mistakes, double check everything that is generated. All generated documents must go through a human reveiw process before applying for a position.
 
 ## Features
 
