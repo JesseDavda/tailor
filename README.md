@@ -135,48 +135,6 @@ The tool uses carefully crafted prompts that instruct Claude to:
 - **Never** invent or exaggerate facts, skills, or experiences
 - Keep all dates, company names, and titles accurate
 
-## Project Structure
-
-```
-tailor/
-├── cmd/
-│   └── tailor/
-│       └── main.go              # CLI entry point
-├── internal/
-│   ├── claude/
-│   │   ├── client.go            # Claude API wrapper
-│   │   └── prompts.go           # Tailoring prompt templates
-│   ├── resume/
-│   │   ├── models.go            # Resume data structures
-│   │   └── processor.go         # YAML manipulation logic
-│   └── job/
-│       └── parser.go            # Job description parsing
-├── pkg/
-│   └── config/
-│       └── config.go            # Configuration management
-├── go.mod
-├── go.sum
-└── README.md
-```
-
-## Error Handling
-
-The tool provides clear error messages for common issues:
-
-- **Missing API key**: Set `ANTHROPIC_API_KEY` or use `--api-key`
-- **File not found**: Check file paths are correct
-- **Invalid YAML**: Ensure your master resume is valid RenderCV YAML
-- **API errors**: Check API key and network connection
-- **Empty job description**: Provide a valid job posting
-
-## Best Practices
-
-1. **Keep a master resume**: Maintain one comprehensive RenderCV YAML with all your experiences
-2. **Save job descriptions**: Keep a folder of job postings you're applying to
-3. **Review before submitting**: Always review the tailored output for accuracy
-4. **Version control**: Use git to track different tailored versions
-5. **Test with RenderCV**: Verify the tailored YAML renders correctly before submission
-
 ## Limitations
 
 - Requires valid RenderCV YAML format as input
@@ -184,26 +142,6 @@ The tool provides clear error messages for common issues:
 - API calls cost tokens (typically $0.01-0.05 per resume)
 - Output quality depends on master resume quality
 - Does not generate PDFs (use RenderCV for that)
-
-## Troubleshooting
-
-### Build fails
-- Ensure Go 1.25.6+ is installed: `go version`
-- Run `go mod tidy` to sync dependencies
-
-### API key not recognized
-- Check the key starts with `sk-ant-`
-- Ensure no extra spaces or quotes in env var
-- Try passing via `--api-key` flag instead
-
-### Invalid YAML output
-- Verify your master resume is valid: `rendercv render master.yaml`
-- Report issues with example input (redact personal info)
-
-### Tailoring takes too long
-- Normal time is 5-30 seconds depending on resume length
-- Check internet connection
-- Verify API service status
 
 ## Contributing
 
