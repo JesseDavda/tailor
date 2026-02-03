@@ -17,11 +17,14 @@ var rootCmd = &cobra.Command{
 	Example: `  # Basic usage
   tailor --resume master.yaml --job job-desc.txt
 
+  # Generate cover letter
+  tailor -r master.yaml -j job.txt --cover-letter
+
+  # Custom cover letter output
+  tailor -r master.yaml -j job.txt -c --cover-letter-output letter.txt
+
   # Batch approval by section
   tailor -r master.yaml -j job.txt --approval-mode batch
-
-  # Auto-approve high confidence changes
-  tailor -r master.yaml -j job.txt --approval-mode auto-high
 
   # Dry run (preview without writing)
   tailor -r master.yaml -j job.txt --dry-run`,
@@ -40,6 +43,12 @@ func init() {
 	// Output flags
 	rootCmd.Flags().StringVarP(&cfg.Global.OutputPath, "output", "o",
 		"tailored-resume.yaml", "Output path for tailored YAML")
+
+	// Cover letter flags
+	rootCmd.Flags().BoolVarP(&cfg.Global.GenerateCoverLetter, "cover-letter", "c", false,
+		"Generate cover letter with key qualifications and full text")
+	rootCmd.Flags().StringVar(&cfg.Global.CoverLetterOutputPath, "cover-letter-output", "",
+		"Custom output path for cover letter (default: derived from resume output)")
 
 	// Configuration flags
 	apiKeyFlag := ""

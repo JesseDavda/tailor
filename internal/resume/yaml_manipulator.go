@@ -241,8 +241,12 @@ func (d *YAMLDocument) updateNodeValue(node *yaml.Node, value any) error {
 		return fmt.Errorf("failed to unmarshal value: %w", err)
 	}
 
-	// Copy the new node's content to the existing node
-	*node = newNode
+	// Unwrap document node if present (yaml.Unmarshal wraps content in DocumentNode)
+	if newNode.Kind == yaml.DocumentNode && len(newNode.Content) > 0 {
+		*node = *newNode.Content[0]
+	} else {
+		*node = newNode
+	}
 
 	return nil
 }

@@ -26,17 +26,23 @@ func NewClient(apiKey string, model string) *Client {
 	}
 }
 
-// TailorResumeInteractive analyzes the resume and returns a set of proposed changes
-func (c *Client) TailorResumeInteractive(ctx context.Context, masterYAML, jobDescription string) (*changes.ChangeSet, error) {
-	userPrompt := BuildInteractiveUserPrompt(masterYAML, jobDescription)
+// TailorResumeInteractive analyzes the resume and optionally generates cover letter
+func (c *Client) TailorResumeInteractive(ctx context.Context, masterYAML, jobDescription string, includeCoverLetter bool) (*changes.ChangeSet, error) {
+	userPrompt := BuildInteractiveUserPrompt(masterYAML, jobDescription, includeCoverLetter)
+
+	// Select appropriate system prompt
+	systemPrompt := SystemPromptInteractive
+	if includeCoverLetter {
+		systemPrompt = SystemPromptWithCoverLetter
+	}
 
 	// Create the message request
 	params := anthropic.MessageNewParams{
 		Model:     anthropic.Model(c.model),
-		MaxTokens: 8000,
+		MaxTokens: 12000, // Increased from 8000 for cover letter content
 		System: []anthropic.TextBlockParam{
 			{
-				Text: SystemPromptInteractive,
+				Text: systemPrompt,
 				Type: "text",
 			},
 		},

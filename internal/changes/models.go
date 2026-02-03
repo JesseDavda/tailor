@@ -20,10 +20,17 @@ const (
 	StatusSkipped  ChangeStatus = "skipped"
 )
 
+// CoverLetterData contains AI-generated cover letter content
+type CoverLetterData struct {
+	BulletPoints []string `json:"bullet_points"`
+	FullLetter   string   `json:"full_letter"`
+}
+
 // ChangeSet represents a collection of changes with summary
 type ChangeSet struct {
-	Changes []Change      `json:"changes"`
-	Summary ChangeSummary `json:"summary"`
+	Changes     []Change         `json:"changes"`
+	Summary     ChangeSummary    `json:"summary"`
+	CoverLetter *CoverLetterData `json:"cover_letter,omitempty"`
 }
 
 // Change represents a single granular change to the resume
@@ -103,4 +110,11 @@ func (cs *ChangeSet) CountByStatus() map[ChangeStatus]int {
 		counts[change.Status]++
 	}
 	return counts
+}
+
+// HasCoverLetter returns true if the changeset contains valid cover letter data
+func (cs *ChangeSet) HasCoverLetter() bool {
+	return cs.CoverLetter != nil &&
+		len(cs.CoverLetter.BulletPoints) > 0 &&
+		cs.CoverLetter.FullLetter != ""
 }

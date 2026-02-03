@@ -87,6 +87,8 @@ Get detailed progress information:
 | --job | -j | Path to job description file | * |
 | --job-text | | Direct job description text input | * |
 | --output | -o | Output path for tailored YAML | No (default: `tailored-resume.yaml`) |
+| --cover-letter | -c | Generate cover letter with key qualifications and full text | No (default false) |
+| --cover-letter-output | | Custom cover letter output path  | No (default: derived from resume output) |
 | --api-key | | Anthropic API key | No (can use env var) |
 | --model | -m | Anthropic model | No, will default to claude-haiku-4-5, the alias for the latest Haiku model |
 | --verbose | -v | Enable verbose output | No |

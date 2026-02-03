@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 // Global holds the global application configuration
@@ -23,6 +24,10 @@ type Config struct {
 
 	// Output Configuration
 	OutputPath string
+
+	// Cover Letter Configuration
+	GenerateCoverLetter   bool
+	CoverLetterOutputPath string
 
 	// Runtime Configuration
 	DryRun       bool
@@ -75,6 +80,11 @@ func (c *Config) Validate() error {
 		return fmt.Errorf("invalid approval mode: %s (must be one-by-one, batch, or auto-high)", c.ApprovalMode)
 	}
 
+	// Auto-generate cover letter output path if not specified
+	if c.GenerateCoverLetter && c.CoverLetterOutputPath == "" {
+		c.CoverLetterOutputPath = generateCoverLetterPath(c.OutputPath)
+	}
+
 	return nil
 }
 
@@ -84,4 +94,14 @@ func LoadAPIKey(flagValue string) string {
 		return flagValue
 	}
 	return os.Getenv("ANTHROPIC_API_KEY")
+}
+
+// generateCoverLetterPath creates cover letter path from resume path
+// Example: "tailored-resume.yaml" -> "tailored-cover-letter.txt"
+func generateCoverLetterPath(resumePath string) string {
+	base := resumePath
+	if idx := strings.LastIndex(base, "."); idx > 0 {
+		base = base[:idx]
+	}
+	return base + "-cover-letter.txt"
 }

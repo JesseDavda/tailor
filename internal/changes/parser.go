@@ -26,6 +26,11 @@ func ParseChangeSet(jsonResponse string) (*ChangeSet, error) {
 		return nil, fmt.Errorf("invalid changeset: %w", err)
 	}
 
+	// Validate cover letter if present
+	if err := validateCoverLetter(changeSet.CoverLetter); err != nil {
+		return nil, fmt.Errorf("invalid cover letter: %w", err)
+	}
+
 	return &changeSet, nil
 }
 
@@ -82,15 +87,15 @@ func validateChange(c *Change) error {
 	switch c.Type {
 	case ChangeTypeModify:
 		if c.Operation.NewValue == nil {
-			return fmt.Errorf("modify operation requires new_value")
+			return fmt.Errorf("modify operation requires new_value (change ID: %s, path: %s)", c.ID, c.Path)
 		}
 	case ChangeTypeReorder:
 		if len(c.Operation.NewOrder) == 0 {
-			return fmt.Errorf("reorder operation requires new_order")
+			return fmt.Errorf("reorder operation requires new_order (change ID: %s, path: %s)", c.ID, c.Path)
 		}
 	case ChangeTypeAdd:
 		if c.Operation.NewValue == nil {
-			return fmt.Errorf("add operation requires new_value")
+			return fmt.Errorf("add operation requires new_value (change ID: %s, path: %s)", c.ID, c.Path)
 		}
 	case ChangeTypeRemove:
 		// Remove operations are valid with just a path
@@ -105,6 +110,27 @@ func validateChange(c *Change) error {
 	// Validate priority
 	if c.Priority < 1 || c.Priority > 3 {
 		return fmt.Errorf("invalid priority: %d (must be 1, 2, or 3)", c.Priority)
+	}
+
+	return nil
+}
+
+// validateCoverLetter validates cover letter data
+func validateCoverLetter(cl *CoverLetterData) error {
+	if cl == nil {
+		return nil // Optional field
+	}
+
+	if len(cl.BulletPoints) == 0 {
+		return fmt.Errorf("cover letter must include bullet points")
+	}
+
+	if cl.FullLetter == "" {
+		return fmt.Errorf("cover letter must include full text")
+	}
+
+	if len(cl.FullLetter) < 100 {
+		return fmt.Errorf("cover letter text too short (minimum 100 characters)")
 	}
 
 	return nil

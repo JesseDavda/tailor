@@ -6,6 +6,7 @@ import (
 
 	"tailor/internal/changes"
 	"tailor/internal/claude"
+	"tailor/internal/coverletter"
 	"tailor/internal/interactive"
 	"tailor/internal/job"
 	"tailor/internal/resume"
@@ -54,7 +55,12 @@ func (e *Executor) analyzeResume(masterYAML, jobDesc string) (*changes.ChangeSet
 	start := time.Now()
 
 	client := claude.NewClient(e.config.APIKey, e.config.Model)
-	changeSet, err := client.TailorResumeInteractive(e.ctx, masterYAML, jobDesc)
+	changeSet, err := client.TailorResumeInteractive(
+		e.ctx,
+		masterYAML,
+		jobDesc,
+		e.config.GenerateCoverLetter,
+	)
 	if err != nil {
 		e.terminal.Fail("failed to analyze resume: " + err.Error())
 		return nil, fmt.Errorf("failed to analyze resume: %w", err)
@@ -147,10 +153,32 @@ func (e *Executor) writeOutput(content string) error {
 	}
 	e.terminal.Success("Tailored resume written")
 
-	e.terminal.Section("✓ Resume tailoring complete!")
-	fmt.Printf("\nNext steps:\n")
-	fmt.Printf("  1. Review: %s\n", e.config.OutputPath)
-	fmt.Printf("  2. Generate PDF: rendercv render %s\n", e.config.OutputPath)
+	return nil
+}
 
+// writeCoverLetter writes the cover letter to file
+func (e *Executor) writeCoverLetter(changeSet *changes.ChangeSet) error {
+	if !changeSet.HasCoverLetter() {
+		return nil // Nothing to write
+	}
+
+	if e.config.DryRun {
+		e.terminal.Section("COVER LETTER PREVIEW (DRY RUN)")
+		writer := coverletter.NewWriter()
+		preview := writer.GetPreview(changeSet.CoverLetter)
+		fmt.Println(preview)
+		e.terminal.Info(fmt.Sprintf("Would write to: %s", e.config.CoverLetterOutputPath))
+		return nil
+	}
+
+	e.terminal.UpdateSpinner(fmt.Sprintf("Writing cover letter to %s", e.config.CoverLetterOutputPath))
+
+	writer := coverletter.NewWriter()
+	if err := writer.WriteToFile(e.config.CoverLetterOutputPath, changeSet.CoverLetter); err != nil {
+		e.terminal.Fail("failed to write cover letter: " + err.Error())
+		return fmt.Errorf("failed to write cover letter: %w", err)
+	}
+
+	e.terminal.Success("Cover letter written")
 	return nil
 }
