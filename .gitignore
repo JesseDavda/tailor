@@ -1,0 +1,48 @@
+# Binaries
+tailor
+!tailor/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Output files
+tailored-resume.yaml
+tailored-*.yaml
+output/
+
+# API keys and secrets
+.env
+*.key
+secrets/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# RenderCV output
+rendercv_output/
+*.pdf
