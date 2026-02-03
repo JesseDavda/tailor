@@ -54,7 +54,7 @@ func init() {
 	apiKeyFlag := ""
 	rootCmd.Flags().StringVar(&apiKeyFlag, "api-key", "",
 		"Anthropic API key (or use ANTHROPIC_API_KEY env var)")
-	rootCmd.Flags().StringVarP(&cfg.Global.Model, "model", "m", "", "Claude model to use, list of models can be found here: https://platform.claude.com/docs/en/about-claude/models/overview")
+	rootCmd.Flags().StringVarP(&cfg.Global.Model, "model", "m", "claude-haiku-4-5", "Claude model to use, list of models can be found here: https://platform.claude.com/docs/en/about-claude/models/overview")
 
 	// Runtime flags
 	rootCmd.Flags().BoolVar(&cfg.Global.DryRun, "dry-run", false,

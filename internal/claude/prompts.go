@@ -168,7 +168,6 @@ IMPORTANT: ALL operations must include the appropriate fields - add/modify MUST 
 CONFIDENCE LEVELS: high, medium, low
 PRIORITY LEVELS: 1 (important), 2 (minor)`
 
-// BuildInteractiveUserPrompt constructs the user prompt for interactive mode
 func BuildInteractiveUserPrompt(masterResumeYAML, jobDescription string, includeCoverLetter bool) string {
 	basePrompt := fmt.Sprintf(`Master Resume (RenderCV YAML):
 ---

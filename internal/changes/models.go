@@ -47,47 +47,40 @@ type Change struct {
 
 // Operation contains the details of what to change
 type Operation struct {
-	OldValue interface{}   `json:"old_value,omitempty"`
-	NewValue interface{}   `json:"new_value,omitempty"`
-	OldOrder []int         `json:"old_order,omitempty"` // for reorder type
-	NewOrder []int         `json:"new_order,omitempty"` // for reorder type
-	Position *int          `json:"position,omitempty"`  // for add type (where to insert)
-	Index    *int          `json:"index,omitempty"`     // for remove type (what to remove)
+	OldValue interface{} `json:"old_value,omitempty"`
+	NewValue interface{} `json:"new_value,omitempty"`
+	OldOrder []int       `json:"old_order,omitempty"` // for reorder type
+	NewOrder []int       `json:"new_order,omitempty"` // for reorder type
+	Position *int        `json:"position,omitempty"`  // for add type (where to insert)
+	Index    *int        `json:"index,omitempty"`     // for remove type (what to remove)
 }
 
-// ChangeSummary provides high-level overview of the changeset
 type ChangeSummary struct {
 	TotalChanges     int      `json:"total_changes"`
 	SectionsAffected []string `json:"sections_affected"`
 	KeyOptimizations []string `json:"key_optimizations"`
 }
 
-// IsApproved returns true if the change has been approved
 func (c *Change) IsApproved() bool {
 	return c.Status == StatusApproved
 }
 
-// IsPending returns true if the change is still pending review
 func (c *Change) IsPending() bool {
 	return c.Status == StatusPending
 }
 
-// Approve marks the change as approved
 func (c *Change) Approve() {
 	c.Status = StatusApproved
 }
 
-// Reject marks the change as rejected
 func (c *Change) Reject() {
 	c.Status = StatusRejected
 }
 
-// Skip marks the change as skipped
 func (c *Change) Skip() {
 	c.Status = StatusSkipped
 }
 
-// GetApprovedChanges returns only the approved changes from a changeset
 func (cs *ChangeSet) GetApprovedChanges() []Change {
 	approved := []Change{}
 	for _, change := range cs.Changes {
@@ -98,7 +91,6 @@ func (cs *ChangeSet) GetApprovedChanges() []Change {
 	return approved
 }
 
-// CountByStatus returns counts of changes by status
 func (cs *ChangeSet) CountByStatus() map[ChangeStatus]int {
 	counts := map[ChangeStatus]int{
 		StatusPending:  0,
@@ -112,7 +104,6 @@ func (cs *ChangeSet) CountByStatus() map[ChangeStatus]int {
 	return counts
 }
 
-// HasCoverLetter returns true if the changeset contains valid cover letter data
 func (cs *ChangeSet) HasCoverLetter() bool {
 	return cs.CoverLetter != nil &&
 		len(cs.CoverLetter.BulletPoints) > 0 &&

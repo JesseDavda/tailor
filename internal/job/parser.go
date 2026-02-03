@@ -6,7 +6,6 @@ import (
 	"strings"
 )
 
-// ReadJobDescription reads a job description from a file
 func ReadJobDescription(path string) (string, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -23,7 +22,6 @@ func ReadJobDescription(path string) (string, error) {
 	return content, nil
 }
 
-// ParseJobText validates and cleans direct text input
 func ParseJobText(text string) (string, error) {
 	text = strings.TrimSpace(text)
 

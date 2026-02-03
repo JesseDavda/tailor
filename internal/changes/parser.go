@@ -6,9 +6,7 @@ import (
 	"strings"
 )
 
-// ParseChangeSet parses Claude's JSON response into a ChangeSet
 func ParseChangeSet(jsonResponse string) (*ChangeSet, error) {
-	// Clean markdown code blocks if present
 	cleaned := cleanMarkdownCodeBlocks(jsonResponse)
 
 	var changeSet ChangeSet
@@ -16,17 +14,14 @@ func ParseChangeSet(jsonResponse string) (*ChangeSet, error) {
 		return nil, fmt.Errorf("failed to parse JSON response: %w", err)
 	}
 
-	// Initialize all changes to pending status
 	for i := range changeSet.Changes {
 		changeSet.Changes[i].Status = StatusPending
 	}
 
-	// Validate the changeset
 	if err := validateChangeSet(&changeSet); err != nil {
 		return nil, fmt.Errorf("invalid changeset: %w", err)
 	}
 
-	// Validate cover letter if present
 	if err := validateCoverLetter(changeSet.CoverLetter); err != nil {
 		return nil, fmt.Errorf("invalid cover letter: %w", err)
 	}
@@ -48,7 +43,6 @@ func cleanMarkdownCodeBlocks(content string) string {
 	return strings.TrimSpace(content)
 }
 
-// validateChangeSet validates the structure and content of a changeset
 func validateChangeSet(cs *ChangeSet) error {
 	if len(cs.Changes) == 0 {
 		return fmt.Errorf("changeset contains no changes")
@@ -63,14 +57,11 @@ func validateChangeSet(cs *ChangeSet) error {
 	return nil
 }
 
-// validateChange validates a single change
 func validateChange(c *Change) error {
-	// Validate ID
 	if c.ID == "" {
 		return fmt.Errorf("change ID is required")
 	}
 
-	// Validate type
 	switch c.Type {
 	case ChangeTypeModify, ChangeTypeReorder, ChangeTypeAdd, ChangeTypeRemove:
 		// Valid type
@@ -78,12 +69,10 @@ func validateChange(c *Change) error {
 		return fmt.Errorf("invalid change type: %s", c.Type)
 	}
 
-	// Validate path
 	if c.Path == "" {
 		return fmt.Errorf("change path is required")
 	}
 
-	// Validate operation based on type
 	switch c.Type {
 	case ChangeTypeModify:
 		if c.Operation.NewValue == nil {
@@ -101,13 +90,11 @@ func validateChange(c *Change) error {
 		// Remove operations are valid with just a path
 	}
 
-	// Validate confidence
 	confidence := strings.ToLower(c.Confidence)
 	if confidence != "high" && confidence != "medium" && confidence != "low" {
 		return fmt.Errorf("invalid confidence level: %s (must be high, medium, or low)", c.Confidence)
 	}
 
-	// Validate priority
 	if c.Priority < 1 || c.Priority > 3 {
 		return fmt.Errorf("invalid priority: %d (must be 1, 2, or 3)", c.Priority)
 	}
@@ -115,10 +102,9 @@ func validateChange(c *Change) error {
 	return nil
 }
 
-// validateCoverLetter validates cover letter data
 func validateCoverLetter(cl *CoverLetterData) error {
 	if cl == nil {
-		return nil // Optional field
+		return nil
 	}
 
 	if len(cl.BulletPoints) == 0 {

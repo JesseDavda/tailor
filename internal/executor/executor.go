@@ -7,14 +7,12 @@ import (
 	"tailor/pkg/config"
 )
 
-// Executor orchestrates the resume tailoring workflow
 type Executor struct {
 	config   *config.Config
 	terminal *terminal.Manager
 	ctx      context.Context
 }
 
-// New creates a new Executor with the provided configuration
 func New(cfg *config.Config) *Executor {
 	return &Executor{
 		config:   cfg,
@@ -23,12 +21,10 @@ func New(cfg *config.Config) *Executor {
 	}
 }
 
-// Run executes the complete resume tailoring workflow
 func (e *Executor) Run() error {
 	e.terminal.Start()
 	defer e.terminal.Shutdown()
 
-	// Load inputs
 	masterYAML, err := e.loadResume()
 	if err != nil {
 		return err
@@ -39,18 +35,15 @@ func (e *Executor) Run() error {
 		return err
 	}
 
-	// Get changes (and optionally cover letter) from Claude
 	changeSet, err := e.analyzeResume(masterYAML, jobDesc)
 	if err != nil {
 		return err
 	}
 
-	// Interactive review of resume changes
 	if err := e.reviewChanges(changeSet); err != nil {
 		return err
 	}
 
-	// Apply and write resume changes
 	approvedCount := len(changeSet.GetApprovedChanges())
 	if approvedCount == 0 {
 		e.terminal.Info("No resume changes approved")
@@ -65,7 +58,6 @@ func (e *Executor) Run() error {
 		}
 	}
 
-	// Handle cover letter if generated
 	if e.config.GenerateCoverLetter {
 		if changeSet.HasCoverLetter() {
 			if err := e.writeCoverLetter(changeSet); err != nil {
@@ -76,7 +68,6 @@ func (e *Executor) Run() error {
 		}
 	}
 
-	// Final summary
 	e.terminal.Section("✓ Tailor complete!")
 	fmt.Printf("\nFiles generated:\n")
 	if approvedCount > 0 {

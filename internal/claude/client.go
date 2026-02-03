@@ -15,7 +15,6 @@ type Client struct {
 	model  string
 }
 
-// NewClient creates a new Claude API client
 func NewClient(apiKey string, model string) *Client {
 	client := anthropic.NewClient(
 		option.WithAPIKey(apiKey),
@@ -26,20 +25,17 @@ func NewClient(apiKey string, model string) *Client {
 	}
 }
 
-// TailorResumeInteractive analyzes the resume and optionally generates cover letter
 func (c *Client) TailorResumeInteractive(ctx context.Context, masterYAML, jobDescription string, includeCoverLetter bool) (*changes.ChangeSet, error) {
 	userPrompt := BuildInteractiveUserPrompt(masterYAML, jobDescription, includeCoverLetter)
 
-	// Select appropriate system prompt
 	systemPrompt := SystemPromptInteractive
 	if includeCoverLetter {
 		systemPrompt = SystemPromptWithCoverLetter
 	}
 
-	// Create the message request
 	params := anthropic.MessageNewParams{
 		Model:     anthropic.Model(c.model),
-		MaxTokens: 12000, // Increased from 8000 for cover letter content
+		MaxTokens: 12000,
 		System: []anthropic.TextBlockParam{
 			{
 				Text: systemPrompt,
@@ -56,7 +52,6 @@ func (c *Client) TailorResumeInteractive(ctx context.Context, masterYAML, jobDes
 		return nil, fmt.Errorf("Claude API error: %w", err)
 	}
 
-	// Extract the response text
 	if len(message.Content) == 0 {
 		return nil, fmt.Errorf("empty response from Claude API")
 	}
@@ -73,7 +68,6 @@ func (c *Client) TailorResumeInteractive(ctx context.Context, masterYAML, jobDes
 		return nil, fmt.Errorf("no text content in Claude API response")
 	}
 
-	// Parse the JSON response into a ChangeSet
 	changeSet, err := changes.ParseChangeSet(responseText)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse changeset: %w", err)

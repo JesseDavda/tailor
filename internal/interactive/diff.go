@@ -15,20 +15,17 @@ var (
 	bold   = color.New(color.Bold).SprintFunc()
 )
 
-// FormatDiff creates a colored diff display for old and new values
 func FormatDiff(oldValue, newValue any) string {
 	oldStr := fmt.Sprintf("%v", oldValue)
 	newStr := fmt.Sprintf("%v", newValue)
 
 	var result strings.Builder
 
-	// Show old value (removed)
 	if oldStr != "" {
 		result.WriteString(red("- " + oldStr))
 		result.WriteString("\n")
 	}
 
-	// Show new value (added)
 	if newStr != "" {
 		result.WriteString(green("+ " + newStr))
 	}
@@ -36,7 +33,6 @@ func FormatDiff(oldValue, newValue any) string {
 	return result.String()
 }
 
-// FormatReorderDiff creates a display for array reordering
 func FormatReorderDiff(oldOrder, newOrder []int, items []string) string {
 	var result strings.Builder
 
@@ -58,7 +54,6 @@ func FormatReorderDiff(oldOrder, newOrder []int, items []string) string {
 	return result.String()
 }
 
-// FormatChangeHeader creates a formatted header for a change
 func FormatChangeHeader(changeNum, totalChanges int, changeType, path string) string {
 	var result strings.Builder
 
@@ -69,7 +64,6 @@ func FormatChangeHeader(changeNum, totalChanges int, changeType, path string) st
 	return result.String()
 }
 
-// FormatPriority formats the priority and confidence display
 func FormatPriority(priority int, confidence string) string {
 	var priorityStr string
 	switch priority {
@@ -98,12 +92,10 @@ func FormatPriority(priority int, confidence string) string {
 		confidenceColor(strings.Title(confidence)))
 }
 
-// FormatReason formats the reason text
 func FormatReason(reason string) string {
 	return fmt.Sprintf("\nReason: %s\n", reason)
 }
 
-// FormatSummary creates a summary of the approval session
 func FormatSummary(approved, rejected, skipped int) string {
 	var result strings.Builder
 
@@ -115,12 +107,10 @@ func FormatSummary(approved, rejected, skipped int) string {
 	return result.String()
 }
 
-// FormatAddDiff formats an add operation
 func FormatAddDiff(newValue any) string {
 	return green(fmt.Sprintf("+ ADD: %v", newValue))
 }
 
-// FormatRemoveDiff formats a remove operation
 func FormatRemoveDiff(oldValue any) string {
 	return red(fmt.Sprintf("- REMOVE: %v", oldValue))
 }

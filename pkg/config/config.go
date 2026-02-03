@@ -6,12 +6,10 @@ import (
 	"strings"
 )
 
-// Global holds the global application configuration
 var Global = &Config{
 	Model: "claude-haiku-4-5",
 }
 
-// Config holds the application configuration
 type Config struct {
 	// API Configuration
 	APIKey string
@@ -34,7 +32,6 @@ type Config struct {
 	ApprovalMode string
 }
 
-// Validate checks if the configuration is valid
 func (c *Config) Validate() error {
 	// Check for API key
 	if c.APIKey == "" {
@@ -88,7 +85,6 @@ func (c *Config) Validate() error {
 	return nil
 }
 
-// LoadAPIKey loads the API key from flag or environment
 func LoadAPIKey(flagValue string) string {
 	if flagValue != "" {
 		return flagValue
@@ -96,8 +92,6 @@ func LoadAPIKey(flagValue string) string {
 	return os.Getenv("ANTHROPIC_API_KEY")
 }
 
-// generateCoverLetterPath creates cover letter path from resume path
-// Example: "tailored-resume.yaml" -> "tailored-cover-letter.txt"
 func generateCoverLetterPath(resumePath string) string {
 	base := resumePath
 	if idx := strings.LastIndex(base, "."); idx > 0 {

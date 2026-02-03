@@ -12,7 +12,6 @@ import (
 	"tailor/internal/resume"
 )
 
-// loadResume reads and validates the master resume YAML file
 func (e *Executor) loadResume() (string, error) {
 	e.terminal.UpdateSpinner("Reading master resume")
 
@@ -27,7 +26,6 @@ func (e *Executor) loadResume() (string, error) {
 	return content, nil
 }
 
-// loadJobDescription reads the job description from file or text input
 func (e *Executor) loadJobDescription() (string, error) {
 	e.terminal.UpdateSpinner("Reading job description")
 
@@ -49,7 +47,6 @@ func (e *Executor) loadJobDescription() (string, error) {
 	return content, nil
 }
 
-// analyzeResume sends resume and job description to Claude for analysis
 func (e *Executor) analyzeResume(masterYAML, jobDesc string) (*changes.ChangeSet, error) {
 	e.terminal.UpdateSpinner("Analyzing resume with Claude API")
 	start := time.Now()
@@ -71,14 +68,11 @@ func (e *Executor) analyzeResume(masterYAML, jobDesc string) (*changes.ChangeSet
 	return changeSet, nil
 }
 
-// reviewChanges presents changes to user for interactive approval
 func (e *Executor) reviewChanges(changeSet *changes.ChangeSet) error {
-	// Pause spinner for interactive review
 	session := e.terminal.PauseForInteractive()
 
 	e.terminal.Section("CHANGE REVIEW")
 
-	// Pass session to approver
 	approver := interactive.NewApprover(e.config.ApprovalMode, session)
 	if err := approver.ReviewChanges(changeSet); err != nil {
 		session.Resume("")
@@ -86,12 +80,10 @@ func (e *Executor) reviewChanges(changeSet *changes.ChangeSet) error {
 		return fmt.Errorf("review failed: %w", err)
 	}
 
-	// Resume spinner
 	session.Resume("Review complete")
 	return nil
 }
 
-// applyChanges validates and applies approved changes to the master YAML
 func (e *Executor) applyChanges(masterYAML string, changeSet *changes.ChangeSet) (string, error) {
 	e.terminal.UpdateSpinner("Parsing YAML document")
 	doc, err := resume.ParseYAMLDocument(masterYAML)
@@ -136,7 +128,6 @@ func (e *Executor) applyChanges(masterYAML string, changeSet *changes.ChangeSet)
 	return tailoredYAML, nil
 }
 
-// writeOutput writes the tailored resume to the output file
 func (e *Executor) writeOutput(content string) error {
 	if e.config.DryRun {
 		e.terminal.UpdateSpinner("Dry run mode - skipping write")
@@ -156,10 +147,9 @@ func (e *Executor) writeOutput(content string) error {
 	return nil
 }
 
-// writeCoverLetter writes the cover letter to file
 func (e *Executor) writeCoverLetter(changeSet *changes.ChangeSet) error {
 	if !changeSet.HasCoverLetter() {
-		return nil // Nothing to write
+		return nil
 	}
 
 	if e.config.DryRun {
